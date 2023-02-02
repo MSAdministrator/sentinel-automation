@@ -1,21 +1,20 @@
 """Main class / entrypoint for this project."""
 from typing import Dict
 
-
 from .base import Base
 from .configuration import ConfigurationManager
 
 
 class Automation(Base):
     """Main automation class."""
-    
+
     def __init__(self) -> None:
         """Main entry point, including pre-flight checks.
-        
+
         We check to ensure Docker is installed before continuing.
         If it is not, we provide guidance and exit.
         """
-        # First check for configuration file 
+        # First check for configuration file
         Base.config_manager = ConfigurationManager()
         if not Base.config:
             self.get_config()

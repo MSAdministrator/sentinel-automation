@@ -1,4 +1,5 @@
-"""sentinel_automation.utils.exceptions"""
+"""sentinel_automation.utils.exceptions."""
+
 
 class CustomExceptionError(Exception):
     """Raised when an error is encountered."""

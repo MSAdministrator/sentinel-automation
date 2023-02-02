@@ -4,7 +4,6 @@ import os
 from string import Template
 from typing import AnyStr
 from typing import Dict
-from typing import List
 
 import yaml
 from attrs import asdict
@@ -19,12 +18,21 @@ from .base import Base
 @define
 class Authorization:
     """Contains settings for authorization to Graph API and Azure endpoints."""
+
     client_id: AnyStr = field(factory=str, metadata={"question": Template("Please provide your Graph API Client ID: ")})
-    client_secret: AnyStr = field(factory=str, metadata={"question": Template("Please provide your Graph API Client Secret: ")})
+    client_secret: AnyStr = field(
+        factory=str, metadata={"question": Template("Please provide your Graph API Client Secret: ")}
+    )
     tenant_id: AnyStr = field(factory=str, metadata={"question": Template("Please provide your Graph API Tenant ID: ")})
-    subscription_id: AnyStr = field(factory=str, metadata={"question": Template("Please provide your Azure Sentinel Subscription ID: ")})
-    resource_group_name: AnyStr = field(factory=str, metadata={"question": Template("Please provide your Azure Sentinel Resource Group Name: ")})
-    workspace_name: AnyStr = field(factory=str, metadata={"question": Template("Please provide your Azure Sentinel Workspace Name: ")})
+    subscription_id: AnyStr = field(
+        factory=str, metadata={"question": Template("Please provide your Azure Sentinel Subscription ID: ")}
+    )
+    resource_group_name: AnyStr = field(
+        factory=str, metadata={"question": Template("Please provide your Azure Sentinel Resource Group Name: ")}
+    )
+    workspace_name: AnyStr = field(
+        factory=str, metadata={"question": Template("Please provide your Azure Sentinel Workspace Name: ")}
+    )
     api_version: AnyStr = "2022-11-01"
 
 
@@ -35,6 +43,7 @@ class Configuration:
     authorization: Authorization = field(factory=Authorization)
 
     def __attrs_post_init__(self):
+        """Casting data objects to their correct type during initialization."""
         if self.authorization:
             self.authorization = Authorization(**self.authorization)
 
@@ -63,15 +72,17 @@ class ConfigurationManager(Base):
             "tenant_id": self.session.prompt(fields(Authorization).tenant_id.metadata["question"].substitute()),
             "client_id": self.session.prompt(fields(Authorization).client_id.metadata["question"].substitute()),
             "client_secret": self.session.prompt(fields(Authorization).client_secret.metadata["question"].substitute()),
-            "subscription_id": self.session.prompt(fields(Authorization).subscription_id.metadata["question"].substitute()),
-            "resource_group_name": self.session.prompt(fields(Authorization).resource_group_name.metadata["question"].substitute()),
-            "workspace_name": self.session.prompt(fields(Authorization).workspace_name.metadata["question"].substitute())
+            "subscription_id": self.session.prompt(
+                fields(Authorization).subscription_id.metadata["question"].substitute()
+            ),
+            "resource_group_name": self.session.prompt(
+                fields(Authorization).resource_group_name.metadata["question"].substitute()
+            ),
+            "workspace_name": self.session.prompt(
+                fields(Authorization).workspace_name.metadata["question"].substitute()
+            ),
         }
-        return asdict(
-            Configuration(
-                authorization=authorization
-            )
-        )
+        return asdict(Configuration(authorization=authorization))
 
     def _read_from_disk(self, path: str) -> Dict[str, str]:
         """Retreives the configuration file values from a given path on the disk.

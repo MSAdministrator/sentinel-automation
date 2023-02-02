@@ -5,7 +5,6 @@ shared logging across any class inheriting from Base.
 """
 import os
 import pathlib
-
 from typing import AnyStr
 
 from .utils.logger import LoggingBase
@@ -13,7 +12,7 @@ from .utils.logger import LoggingBase
 
 class Base(metaclass=LoggingBase):
     """Base class to all other classes within this project."""
-    
+
     config_manager = None
     config = None
 
